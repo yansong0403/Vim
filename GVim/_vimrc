@@ -1,0 +1,107 @@
+" Default {{{
+source $VIMRUNTIME/vimrc_example.vim
+
+set diffexpr=MyDiff()
+function MyDiff()
+  let opt = '-a --binary '
+  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg1 = substitute(arg1, '!', '\!', 'g')
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg2 = substitute(arg2, '!', '\!', 'g')
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let arg3 = substitute(arg3, '!', '\!', 'g')
+  if $VIMRUNTIME =~ ' '
+    if &sh =~ '\<cmd'
+      if empty(&shellxquote)
+        let l:shxq_sav = ''
+        set shellxquote&
+      endif
+      let cmd = '"' . $VIMRUNTIME . '\diff"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  let cmd = substitute(cmd, '!', '\!', 'g')
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
+  if exists('l:shxq_sav')
+    let &shellxquote=l:shxq_sav
+  endif
+endfunction
+" }}}
+
+" General {{{
+	set noswapfile
+	set noundofile
+	set nobackup
+	set nocompatible
+	
+	set clipboard+=unnamed
+	set winaltkeys=no
+
+	augroup filetype_vim
+		au!
+		au FileType vim setlocal foldmethod=marker
+	augroup END
+	set foldlevelstart=99
+" }}}
+
+" Format {{{
+	set tabstop=4
+	set shiftwidth=4
+	set softtabstop=4
+	set expandtab
+
+	set autoindent
+	set smartindent
+
+    set splitbelow
+    set splitright
+
+	set number
+	syntax on
+" }}}
+
+" GUI {{{
+	colorscheme Tomorrow-Night
+
+	source $VIMRUNTIME/delmenu.vim
+	source $VIMRUNTIME/menu.vim
+	
+	set lines=35 columns=140
+	set guioptions-=T
+	set guioptions-=m
+	set guioptions-=L
+	set guioptions-=r
+	set guioptions-=b
+	set guioptions-=e
+	set guifont=Consolas:h11:cANSI
+" }}}
+
+" Plugin {{{
+    set nocompatible
+    filetype off
+    set rtp+=$VIMRUNTIME/../vimfiles/plugin/Vundle.vim
+    call vundle#begin()
+
+    " Vundle
+    Plugin 'VundleVim/Vundle.vim'
+
+    " Ctrlp
+    Plugin 'kien/ctrlp.vim'
+
+    " NERDTree
+    Plugin 'scrooloose/nerdtree'
+    autocmd vimenter * NERDTree
+    autocmd vimenter * wincmd p
+    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+    call vundle#end()
+    filetype plugin on
+" }}}
