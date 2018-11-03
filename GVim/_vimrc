@@ -36,6 +36,31 @@ function MyDiff()
 endfunction
 " }}}
 
+" Plugin {{{
+    set nocompatible
+    filetype off
+    set rtp+=$VIMRUNTIME/../vimfiles/plugin/Vundle.vim
+    call vundle#begin()
+
+    " Vundle
+    Plugin 'VundleVim/Vundle.vim'
+
+    " Ctrlp
+    Plugin 'kien/ctrlp.vim'
+
+    " Gruvbox
+    Plugin 'morhetz/gruvbox'
+
+    " NERDTree
+    Plugin 'scrooloose/nerdtree'
+    " autocmd vimenter * NERDTree
+    autocmd vimenter * wincmd p
+    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+    call vundle#end()
+    filetype plugin on
+" }}}
+
 " General {{{
 	set noswapfile
 	set noundofile
@@ -65,11 +90,12 @@ endfunction
     set splitright
 
 	set number
+    set relativenumber
 	syntax on
 " }}}
 
 " GUI {{{
-	colorscheme Tomorrow-Night
+    colorscheme gruvbox
 
 	source $VIMRUNTIME/delmenu.vim
 	source $VIMRUNTIME/menu.vim
@@ -84,24 +110,8 @@ endfunction
 	set guifont=Consolas:h11:cANSI
 " }}}
 
-" Plugin {{{
-    set nocompatible
-    filetype off
-    set rtp+=$VIMRUNTIME/../vimfiles/plugin/Vundle.vim
-    call vundle#begin()
-
-    " Vundle
-    Plugin 'VundleVim/Vundle.vim'
-
-    " Ctrlp
-    Plugin 'kien/ctrlp.vim'
-
-    " NERDTree
-    Plugin 'scrooloose/nerdtree'
-    autocmd vimenter * NERDTree
-    autocmd vimenter * wincmd p
-    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-    call vundle#end()
-    filetype plugin on
+" Lang & Encoding {{{
+    set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+    set encoding=utf-8
 " }}}
+
